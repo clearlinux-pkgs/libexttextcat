@@ -4,7 +4,7 @@
 #
 Name     : libexttextcat
 Version  : 3.4.5
-Release  : 1
+Release  : 2
 URL      : https://github.com/LibreOffice/libexttextcat/archive/v3.4.5.tar.gz
 Source0  : https://github.com/LibreOffice/libexttextcat/archive/v3.4.5.tar.gz
 Summary  : Library implementing N-gram-based text categorization
