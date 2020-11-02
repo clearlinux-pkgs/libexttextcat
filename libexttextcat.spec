@@ -4,16 +4,16 @@
 #
 Name     : libexttextcat
 Version  : 3.4.5
-Release  : 2
+Release  : 3
 URL      : https://github.com/LibreOffice/libexttextcat/archive/v3.4.5.tar.gz
 Source0  : https://github.com/LibreOffice/libexttextcat/archive/v3.4.5.tar.gz
 Summary  : Library implementing N-gram-based text categorization
 Group    : Development/Tools
 License  : BSD-3-Clause
-Requires: libexttextcat-bin
-Requires: libexttextcat-lib
-Requires: libexttextcat-license
-Requires: libexttextcat-data
+Requires: libexttextcat-bin = %{version}-%{release}
+Requires: libexttextcat-data = %{version}-%{release}
+Requires: libexttextcat-lib = %{version}-%{release}
+Requires: libexttextcat-license = %{version}-%{release}
 
 %description
 libexttextcat is an N-Gram-Based Text Categorization library primarily intended
@@ -22,8 +22,8 @@ for language guessing.
 %package bin
 Summary: bin components for the libexttextcat package.
 Group: Binaries
-Requires: libexttextcat-data
-Requires: libexttextcat-license
+Requires: libexttextcat-data = %{version}-%{release}
+Requires: libexttextcat-license = %{version}-%{release}
 
 %description bin
 bin components for the libexttextcat package.
@@ -40,10 +40,11 @@ data components for the libexttextcat package.
 %package dev
 Summary: dev components for the libexttextcat package.
 Group: Development
-Requires: libexttextcat-lib
-Requires: libexttextcat-bin
-Requires: libexttextcat-data
-Provides: libexttextcat-devel
+Requires: libexttextcat-lib = %{version}-%{release}
+Requires: libexttextcat-bin = %{version}-%{release}
+Requires: libexttextcat-data = %{version}-%{release}
+Provides: libexttextcat-devel = %{version}-%{release}
+Requires: libexttextcat = %{version}-%{release}
 
 %description dev
 dev components for the libexttextcat package.
@@ -52,8 +53,8 @@ dev components for the libexttextcat package.
 %package lib
 Summary: lib components for the libexttextcat package.
 Group: Libraries
-Requires: libexttextcat-data
-Requires: libexttextcat-license
+Requires: libexttextcat-data = %{version}-%{release}
+Requires: libexttextcat-license = %{version}-%{release}
 
 %description lib
 lib components for the libexttextcat package.
@@ -69,28 +70,37 @@ license components for the libexttextcat package.
 
 %prep
 %setup -q -n libexttextcat-3.4.5
+cd %{_builddir}/libexttextcat-3.4.5
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1534563031
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604353007
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %autogen --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1534563031
+export SOURCE_DATE_EPOCH=1604353007
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/libexttextcat
-cp LICENSE %{buildroot}/usr/share/doc/libexttextcat/LICENSE
+mkdir -p %{buildroot}/usr/share/package-licenses/libexttextcat
+cp %{_builddir}/libexttextcat-3.4.5/LICENSE %{buildroot}/usr/share/package-licenses/libexttextcat/9423a0052858d160a2b385516ba972e1ba83e468
 %make_install
 
 %files
@@ -286,5 +296,5 @@ cp LICENSE %{buildroot}/usr/share/doc/libexttextcat/LICENSE
 /usr/lib64/libexttextcat-2.0.so.0.0.0
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/libexttextcat/LICENSE
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libexttextcat/9423a0052858d160a2b385516ba972e1ba83e468
